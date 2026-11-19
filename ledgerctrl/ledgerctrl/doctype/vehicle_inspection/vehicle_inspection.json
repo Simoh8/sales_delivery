@@ -1,0 +1,206 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "vehicle",
+  "rider",
+  "inspection_date",
+  "inspection_type",
+  "section_break_readings",
+  "odometer_reading",
+  "fuel_level",
+  "section_break_checks",
+  "tyre_condition",
+  "brakes_condition",
+  "lights_condition",
+  "engine_condition",
+  "general_condition",
+  "section_break_result",
+  "inspection_result",
+  "defects_identified",
+  "attachments",
+  "inspected_by"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "VI-.YYYY.-",
+   "default": "VI-.YYYY.-"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "rider",
+   "fieldtype": "Link",
+   "label": "Rider",
+   "options": "Rider Profile"
+  },
+  {
+   "fieldname": "inspection_date",
+   "fieldtype": "Datetime",
+   "label": "Inspection Date",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "inspection_type",
+   "fieldtype": "Select",
+   "label": "Inspection Type",
+   "options": "Pre-Trip\nPost-Trip\nRoutine",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_readings",
+   "fieldtype": "Section Break",
+   "label": "Readings"
+  },
+  {
+   "fieldname": "odometer_reading",
+   "fieldtype": "Float",
+   "label": "Odometer Reading"
+  },
+  {
+   "fieldname": "fuel_level",
+   "fieldtype": "Select",
+   "label": "Fuel Level",
+   "options": "Empty\n1/4\n1/2\n3/4\nFull"
+  },
+  {
+   "fieldname": "section_break_checks",
+   "fieldtype": "Section Break",
+   "label": "Condition Checks"
+  },
+  {
+   "fieldname": "tyre_condition",
+   "fieldtype": "Select",
+   "label": "Tyre Condition",
+   "options": "Good\nFair\nPoor\nN/A"
+  },
+  {
+   "fieldname": "brakes_condition",
+   "fieldtype": "Select",
+   "label": "Brakes Condition",
+   "options": "Good\nFair\nPoor\nN/A"
+  },
+  {
+   "fieldname": "lights_condition",
+   "fieldtype": "Select",
+   "label": "Lights Condition",
+   "options": "Good\nFair\nPoor\nN/A"
+  },
+  {
+   "fieldname": "engine_condition",
+   "fieldtype": "Select",
+   "label": "Engine Condition",
+   "options": "Good\nFair\nPoor\nN/A"
+  },
+  {
+   "fieldname": "general_condition",
+   "fieldtype": "Select",
+   "label": "General Condition",
+   "options": "Good\nFair\nPoor\nN/A"
+  },
+  {
+   "fieldname": "section_break_result",
+   "fieldtype": "Section Break",
+   "label": "Result"
+  },
+  {
+   "fieldname": "inspection_result",
+   "fieldtype": "Select",
+   "label": "Inspection Result",
+   "options": "Passed\nFailed\nRequires Attention",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "defects_identified",
+   "fieldtype": "Small Text",
+   "label": "Defects Identified"
+  },
+  {
+   "fieldname": "attachments",
+   "fieldtype": "Attach",
+   "label": "Attachments"
+  },
+  {
+   "fieldname": "inspected_by",
+   "fieldtype": "Link",
+   "label": "Inspected By",
+   "options": "User",
+   "default": "__user"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Vehicle Inspection",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Fleet Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Fleet Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "inspection_date",
+ "sort_order": "DESC",
+ "states": []
+}

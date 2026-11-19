@@ -1,0 +1,203 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "section_break_basic",
+  "delivery_job",
+  "event_type",
+  "column_break_basic",
+  "timestamp",
+  "created_by",
+  "section_break_status",
+  "old_status",
+  "new_status",
+  "section_break_details",
+  "notes",
+  "reason",
+  "section_break_location",
+  "latitude",
+  "longitude",
+  "location_accuracy",
+  "section_break_metadata",
+  "created_via",
+  "customer_notified",
+  "notification_method",
+  "attachment"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "DE-.YYYY.-"
+  },
+  {
+   "fieldname": "section_break_basic",
+   "fieldtype": "Section Break",
+   "label": "Basic Information"
+  },
+  {
+   "fieldname": "delivery_job",
+   "fieldtype": "Link",
+   "label": "Delivery Job",
+   "options": "Delivery Job",
+   "reqd": 1
+  },
+  {
+   "fieldname": "event_type",
+   "fieldtype": "Select",
+   "label": "Event Type",
+   "options": "Status Change\nAssignment\nReassignment\nArrival\nDeparture\nDelivery Attempt\nDelivery Success\nDelivery Failed\nDelay\nException\nCustom",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_basic",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "timestamp",
+   "fieldtype": "Datetime",
+   "label": "Timestamp",
+   "reqd": 1
+  },
+  {
+   "fieldname": "created_by",
+   "fieldtype": "Link",
+   "label": "Created By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status Change"
+  },
+  {
+   "fieldname": "old_status",
+   "fieldtype": "Data",
+   "label": "Old Status"
+  },
+  {
+   "fieldname": "new_status",
+   "fieldtype": "Data",
+   "label": "New Status"
+  },
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason"
+  },
+  {
+   "fieldname": "section_break_location",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "label": "Latitude"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "label": "Longitude"
+  },
+  {
+   "fieldname": "location_accuracy",
+   "fieldtype": "Float",
+   "label": "Location Accuracy (m)"
+  },
+  {
+   "fieldname": "section_break_metadata",
+   "fieldtype": "Section Break",
+   "label": "Metadata"
+  },
+  {
+   "default": "Mobile App",
+   "fieldname": "created_via",
+   "fieldtype": "Select",
+   "label": "Created Via",
+   "options": "Mobile App\nAPI\nManual\nSystem"
+  },
+  {
+   "default": "0",
+   "fieldname": "customer_notified",
+   "fieldtype": "Check",
+   "label": "Customer Notified"
+  },
+  {
+   "fieldname": "notification_method",
+   "fieldtype": "Select",
+   "label": "Notification Method",
+   "options": "SMS\nEmail\nPush Notification\nWhatsApp\nPhone Call"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Delivery Job",
+   "link_fieldname": "delivery_job"
+  }
+ ],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Delivery Event",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Driver",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Person",
+   "share": 1
+  }
+ ],
+ "sort_field": "timestamp",
+ "sort_order": "DESC",
+ "states": []
+}

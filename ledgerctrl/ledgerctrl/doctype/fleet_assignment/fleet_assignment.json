@@ -1,0 +1,165 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "employee",
+  "rider",
+  "vehicle",
+  "section_break_period",
+  "assignment_start",
+  "assignment_end",
+  "section_break_odometer",
+  "opening_odometer",
+  "closing_odometer",
+  "section_break_status",
+  "assignment_status",
+  "assigned_by",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "FA-.YYYY.-",
+   "default": "FA-.YYYY.-"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rider",
+   "fieldtype": "Link",
+   "label": "Rider",
+   "options": "Rider Profile"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_period",
+   "fieldtype": "Section Break",
+   "label": "Assignment Period"
+  },
+  {
+   "fieldname": "assignment_start",
+   "fieldtype": "Date",
+   "label": "Assignment Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assignment_end",
+   "fieldtype": "Date",
+   "label": "Assignment End"
+  },
+  {
+   "fieldname": "section_break_odometer",
+   "fieldtype": "Section Break",
+   "label": "Odometer"
+  },
+  {
+   "fieldname": "opening_odometer",
+   "fieldtype": "Float",
+   "label": "Opening Odometer"
+  },
+  {
+   "fieldname": "closing_odometer",
+   "fieldtype": "Float",
+   "label": "Closing Odometer"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Active",
+   "fieldname": "assignment_status",
+   "fieldtype": "Select",
+   "label": "Assignment Status",
+   "options": "Active\nCompleted\nCancelled"
+  },
+  {
+   "fieldname": "assigned_by",
+   "fieldtype": "Link",
+   "label": "Assigned By",
+   "options": "User",
+   "default": "__user"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Fleet Assignment",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Fleet Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Fleet Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "assignment_start",
+ "sort_order": "DESC",
+ "states": []
+}

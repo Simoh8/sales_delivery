@@ -16,16 +16,47 @@ def add_cors_headers(response):
 
 # required_apps = []
 
+# JWT-authenticated API calls (Authorization: Bearer <jwt>) carry explicit
+# credentials, so cookie-based CSRF validation does not apply to them. Frappe
+# runs validate_csrf_token() before auth_hooks, so exempt requests bearing a
+# *valid* ledgerctrl JWT here. Invalid/expired tokens fall through to the
+# normal CSRF check.
+def _exempt_jwt_from_csrf():
+    import frappe.auth
+
+    if getattr(frappe.auth.HTTPRequest.validate_csrf_token, "_ledgerctrl_jwt_exempt", False):
+        return
+
+    original = frappe.auth.HTTPRequest.validate_csrf_token
+
+    def validate_csrf_token(self):
+        auth_header = frappe.get_request_header("Authorization", "")
+        if auth_header.startswith("Bearer "):
+            try:
+                from ledgerctrl.ledgerctrl.api.jwt_auth import get_user_from_token
+
+                get_user_from_token(auth_header.split(" ", 1)[1])
+                return
+            except Exception:
+                pass
+        return original(self)
+
+    validate_csrf_token._ledgerctrl_jwt_exempt = True
+    frappe.auth.HTTPRequest.validate_csrf_token = validate_csrf_token
+
+
+_exempt_jwt_from_csrf()
+
+
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "ledgerctrl",
-# 		"logo": "/assets/ledgerctrl/logo.png",
-# 		"title": "ledgerctrl",
-# 		"route": "/ledgerctrl",
-# 		"has_permission": "ledgerctrl.api.permission.has_app_permission"
-# 	}
-# ]rnnUCClWCP0U2wHL8trUOuJrgkMuJwMukdoCLbwC
+add_to_apps_screen = [
+	{
+		"name": "ledgerctrl",
+		"logo": "/assets/frappe/images/frappe-framework-logo.svg",
+		"title": "Fleet Command Center",
+		"route": "/command_center",
+	}
+]
 
 # Includes in <head>
 # ------------------
@@ -104,7 +135,7 @@ app_include_css = [
 # ------------
 
 # before_install = "ledgerctrl.install.before_install"
-# after_install = "ledgerctrl.install.after_install"
+after_install = "ledgerctrl.install.after_install"
 
 # Uninstallation
 # ------------
@@ -138,9 +169,18 @@ app_include_css = [
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
+permission_query_conditions = {
+    "Delivery Job": "ledgerctrl.ledgerctrl.permissions.delivery_job_query_conditions",
+    "Delivery Attempt": "ledgerctrl.ledgerctrl.permissions.delivery_attempt_query_conditions",
+    "Proof of Delivery": "ledgerctrl.ledgerctrl.permissions.proof_of_delivery_query_conditions",
+    "Delivery Stop": "ledgerctrl.ledgerctrl.permissions.delivery_stop_query_conditions",
+    "Delivery Expense": "ledgerctrl.ledgerctrl.permissions.delivery_expense_query_conditions",
+    "Rider Shift": "ledgerctrl.ledgerctrl.permissions.rider_shift_query_conditions",
+    "Rider Availability": "ledgerctrl.ledgerctrl.permissions.rider_availability_query_conditions",
+    "Rider Document": "ledgerctrl.ledgerctrl.permissions.rider_document_query_conditions",
+    "Fuel Log": "ledgerctrl.ledgerctrl.permissions.fuel_log_query_conditions",
+    "Vehicle Inspection": "ledgerctrl.ledgerctrl.permissions.vehicle_inspection_query_conditions",
+}
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
@@ -169,34 +209,43 @@ doc_events = {
     "Delivery Note": {
         "before_submit": "ledgerctrl.ledgerctrl.api.delivery_note_events.generate_otp",
         "before_save": "ledgerctrl.ledgerctrl.api.delivery_note_events.validate_otp"
-    }
+    },
+    "Delivery Job": {
+        "on_update": "ledgerctrl.ledgerctrl.doctype.delivery_job.delivery_job_events.on_job_update"
+    },
 }
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"ledgerctrl.tasks.all"
-# 	],
-# 	"daily": [
-# 		"ledgerctrl.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"ledgerctrl.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"ledgerctrl.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"ledgerctrl.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"all": [
+		"ledgerctrl.tasks.all"
+	],
+	"daily": [
+		"ledgerctrl.tasks.daily",
+		"ledgerctrl.ledgerctrl.api.jwt_auth.cleanup_expired_tokens",
+		"ledgerctrl.ledgerctrl.doctype.gps_log.gps_log.cleanup_old_logs"
+	],
+	"hourly": [
+		"ledgerctrl.tasks.hourly"
+	],
+	"weekly": [
+		"ledgerctrl.tasks.weekly",
+		"ledgerctrl.ledgerctrl.doctype.delivery_event.delivery_event.cleanup_old_events"
+	],
+	"monthly": [
+		"ledgerctrl.tasks.monthly"
+	],
+}
 
 # Testing
 # -------
 
 # before_tests = "ledgerctrl.install.before_tests"
+
+# CORS for the React Fleet Command Center frontend (dev on :3000)
+after_request = ["ledgerctrl.hooks.add_cors_headers"]
 
 # Overriding Methods
 # ------------------------------
@@ -258,9 +307,9 @@ doc_events = {
 # Authentication and authorization
 # --------------------------------
 
-# auth_hooks = [
-# 	"ledgerctrl.auth.validate"
-# ]
+auth_hooks = [
+	"ledgerctrl.ledgerctrl.api.jwt_auth.jwt_auth_hook"
+]
 
 # Automatically update python controller files with type annotations for this app.
 # export_python_type_annotations = True

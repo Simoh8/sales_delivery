@@ -1,0 +1,208 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "delivery_job",
+  "delivery_batch",
+  "delivery_trip",
+  "section_break_stop",
+  "stop_sequence",
+  "stop_type",
+  "customer",
+  "address",
+  "latitude",
+  "longitude",
+  "section_break_timing",
+  "expected_arrival",
+  "actual_arrival",
+  "departure_time",
+  "waiting_duration",
+  "section_break_status",
+  "stop_status",
+  "distance_from_previous_stop",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "DST-.YYYY.-",
+   "default": "DST-.YYYY.-"
+  },
+  {
+   "fieldname": "delivery_job",
+   "fieldtype": "Link",
+   "label": "Delivery Job",
+   "options": "Delivery Job"
+  },
+  {
+   "fieldname": "delivery_batch",
+   "fieldtype": "Link",
+   "label": "Delivery Batch",
+   "options": "Delivery Batch"
+  },
+  {
+   "fieldname": "delivery_trip",
+   "fieldtype": "Link",
+   "label": "Delivery Trip",
+   "options": "Delivery Trip"
+  },
+  {
+   "fieldname": "section_break_stop",
+   "fieldtype": "Section Break",
+   "label": "Stop"
+  },
+  {
+   "fieldname": "stop_sequence",
+   "fieldtype": "Int",
+   "label": "Stop Sequence",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "stop_type",
+   "fieldtype": "Select",
+   "label": "Stop Type",
+   "options": "Pickup\nDelivery\nCollection\nReturn",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Link",
+   "label": "Address",
+   "options": "Address"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Float",
+   "label": "Latitude"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Float",
+   "label": "Longitude"
+  },
+  {
+   "fieldname": "section_break_timing",
+   "fieldtype": "Section Break",
+   "label": "Timing"
+  },
+  {
+   "fieldname": "expected_arrival",
+   "fieldtype": "Datetime",
+   "label": "Expected Arrival"
+  },
+  {
+   "fieldname": "actual_arrival",
+   "fieldtype": "Datetime",
+   "label": "Actual Arrival"
+  },
+  {
+   "fieldname": "departure_time",
+   "fieldtype": "Datetime",
+   "label": "Departure Time"
+  },
+  {
+   "fieldname": "waiting_duration",
+   "fieldtype": "Int",
+   "label": "Waiting Duration (min)"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "stop_status",
+   "fieldtype": "Select",
+   "label": "Stop Status",
+   "options": "Pending\nArrived\nCompleted\nFailed\nSkipped",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "distance_from_previous_stop",
+   "fieldtype": "Float",
+   "label": "Distance From Previous Stop (km)"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Delivery Stop",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Dispatcher",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "stop_sequence",
+ "sort_order": "ASC",
+ "states": []
+}

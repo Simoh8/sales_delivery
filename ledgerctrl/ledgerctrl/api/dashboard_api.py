@@ -2,8 +2,10 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from datetime import datetime, timedelta
+from ledgerctrl.ledgerctrl.api.decorators import jwt_optional
 
 @frappe.whitelist()
+@jwt_optional
 def get_dashboard_stats():
     try:
         # Get outstanding invoices sum
@@ -46,6 +48,7 @@ def get_dashboard_stats():
         }
 
 @frappe.whitelist()
+@jwt_optional
 def get_recent_activity():
     try:
         activity = []

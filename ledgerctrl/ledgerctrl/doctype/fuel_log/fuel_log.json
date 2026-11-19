@@ -1,0 +1,213 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "vehicle",
+  "rider",
+  "fuel_date",
+  "fuel_type",
+  "section_break_quantity",
+  "quantity",
+  "unit_price",
+  "total_cost",
+  "section_break_vehicle",
+  "odometer_reading",
+  "fuel_station",
+  "payment_method",
+  "section_break_flags",
+  "consumption_kmpl",
+  "flag_reason",
+  "receipt_attachment",
+  "section_break_sync",
+  "idempotency_key",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "FL-.YYYY.-",
+   "default": "FL-.YYYY.-"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "rider",
+   "fieldtype": "Link",
+   "label": "Rider",
+   "options": "Rider Profile"
+  },
+  {
+   "fieldname": "fuel_date",
+   "fieldtype": "Date",
+   "label": "Fuel Date",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Select",
+   "label": "Fuel Type",
+   "options": "Petrol\nDiesel\nElectric\nLPG\nOther"
+  },
+  {
+   "fieldname": "section_break_quantity",
+   "fieldtype": "Section Break",
+   "label": "Quantity & Cost"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "label": "Quantity (L / kWh)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit_price",
+   "fieldtype": "Currency",
+   "label": "Unit Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_cost",
+   "fieldtype": "Currency",
+   "label": "Total Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_vehicle",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Details"
+  },
+  {
+   "fieldname": "odometer_reading",
+   "fieldtype": "Float",
+   "label": "Odometer Reading"
+  },
+  {
+   "fieldname": "fuel_station",
+   "fieldtype": "Data",
+   "label": "Fuel Station"
+  },
+  {
+   "fieldname": "payment_method",
+   "fieldtype": "Select",
+   "label": "Payment Method",
+   "options": "Cash\nCard\nCompany Account\nOther"
+  },
+  {
+   "fieldname": "section_break_flags",
+   "fieldtype": "Section Break",
+   "label": "Analysis"
+  },
+  {
+   "fieldname": "consumption_kmpl",
+   "fieldtype": "Float",
+   "label": "Consumption (km/L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "flag_reason",
+   "fieldtype": "Small Text",
+   "label": "Flag Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "receipt_attachment",
+   "fieldtype": "Attach",
+   "label": "Receipt Attachment"
+  },
+  {
+   "fieldname": "section_break_sync",
+   "fieldtype": "Section Break",
+   "label": "Offline Sync"
+  },
+  {
+   "fieldname": "idempotency_key",
+   "fieldtype": "Data",
+   "label": "Idempotency Key",
+   "unique": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Fuel Log",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Fleet Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Fleet Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "fuel_date",
+ "sort_order": "DESC",
+ "states": []
+}

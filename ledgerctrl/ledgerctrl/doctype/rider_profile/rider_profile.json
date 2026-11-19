@@ -1,0 +1,236 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "rider_name",
+  "employee",
+  "user",
+  "company",
+  "section_break_contact",
+  "mobile_number",
+  "email",
+  "identification_number",
+  "column_break_contact",
+  "default_vehicle",
+  "joining_date",
+  "section_break_status",
+  "employment_status",
+  "verification_status",
+  "section_break_zones",
+  "operating_zones",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "RP-.YYYY.-",
+   "default": "RP-.YYYY.-"
+  },
+  {
+   "fieldname": "rider_name",
+   "fieldtype": "Data",
+   "label": "Rider Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_contact",
+   "fieldtype": "Section Break",
+   "label": "Contact Details"
+  },
+  {
+   "fieldname": "mobile_number",
+   "fieldtype": "Data",
+   "label": "Mobile Number"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "identification_number",
+   "fieldtype": "Data",
+   "label": "Identification Number"
+  },
+  {
+   "fieldname": "column_break_contact",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_vehicle",
+   "fieldtype": "Link",
+   "label": "Default Vehicle",
+   "options": "Vehicle"
+  },
+  {
+   "fieldname": "joining_date",
+   "fieldtype": "Date",
+   "label": "Joining Date"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Active",
+   "fieldname": "employment_status",
+   "fieldtype": "Select",
+   "label": "Employment Status",
+   "options": "Active\nInactive\nSuspended\nOn Leave"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "verification_status",
+   "fieldtype": "Select",
+   "label": "Verification Status",
+   "options": "Pending\nVerified\nRejected"
+  },
+  {
+   "fieldname": "section_break_zones",
+   "fieldtype": "Section Break",
+   "label": "Operating Zones"
+  },
+  {
+   "fieldname": "operating_zones",
+   "fieldtype": "Table",
+   "label": "Operating Zones",
+   "options": "Rider Zone"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "links": [
+  {
+   "link_doctype": "Delivery Job",
+   "link_fieldname": "rider_profile"
+  },
+  {
+   "link_doctype": "Delivery Attempt",
+   "link_fieldname": "rider"
+  },
+  {
+   "link_doctype": "Rider Availability",
+   "link_fieldname": "rider"
+  },
+  {
+   "link_doctype": "Rider Shift",
+   "link_fieldname": "rider"
+  },
+  {
+   "link_doctype": "Delivery Batch",
+   "link_fieldname": "assigned_rider"
+  },
+  {
+   "link_doctype": "Fleet Assignment",
+   "link_fieldname": "rider"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Rider Profile",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Dispatcher",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Supervisor",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

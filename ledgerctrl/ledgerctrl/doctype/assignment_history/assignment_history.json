@@ -1,0 +1,207 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "section_break_basic",
+  "delivery_job",
+  "driver",
+  "driver_name",
+  "vehicle",
+  "column_break_basic",
+  "assigned_by",
+  "assigned_at",
+  "assigned_via",
+  "section_break_status",
+  "assignment_status",
+  "accepted_at",
+  "rejected_at",
+  "unassigned_at",
+  "section_break_details",
+  "notes",
+  "reason_for_change",
+  "section_break_location",
+  "driver_location_at_assignment",
+  "distance_to_job",
+  "estimated_arrival_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "AH-.YYYY.-"
+  },
+  {
+   "fieldname": "section_break_basic",
+   "fieldtype": "Section Break",
+   "label": "Basic Information"
+  },
+  {
+   "fieldname": "delivery_job",
+   "fieldtype": "Link",
+   "label": "Delivery Job",
+   "options": "Delivery Job",
+   "reqd": 1
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Link",
+   "label": "Driver",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "driver.employee_name",
+   "fieldname": "driver_name",
+   "fieldtype": "Data",
+   "label": "Driver Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle"
+  },
+  {
+   "fieldname": "column_break_basic",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "assigned_by",
+   "fieldtype": "Link",
+   "label": "Assigned By",
+   "options": "User"
+  },
+  {
+   "fieldname": "assigned_at",
+   "fieldtype": "Datetime",
+   "label": "Assigned At",
+   "reqd": 1
+  },
+  {
+   "default": "Manual",
+   "fieldname": "assigned_via",
+   "fieldtype": "Select",
+   "label": "Assigned Via",
+   "options": "Manual\nAuto-Assignment\nAPI\nMobile App"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Assigned",
+   "fieldname": "assignment_status",
+   "fieldtype": "Select",
+   "label": "Assignment Status",
+   "options": "Assigned\nAccepted\nRejected\nUnassigned\nCompleted",
+   "reqd": 1
+  },
+  {
+   "fieldname": "accepted_at",
+   "fieldtype": "Datetime",
+   "label": "Accepted At"
+  },
+  {
+   "fieldname": "rejected_at",
+   "fieldtype": "Datetime",
+   "label": "Rejected At"
+  },
+  {
+   "fieldname": "unassigned_at",
+   "fieldtype": "Datetime",
+   "label": "Unassigned At"
+  },
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "reason_for_change",
+   "fieldtype": "Small Text",
+   "label": "Reason for Change"
+  },
+  {
+   "fieldname": "section_break_location",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "driver_location_at_assignment",
+   "fieldtype": "Small Text",
+   "label": "Driver Location at Assignment"
+  },
+  {
+   "fieldname": "distance_to_job",
+   "fieldtype": "Float",
+   "label": "Distance to Job (km)"
+  },
+  {
+   "fieldname": "estimated_arrival_time",
+   "fieldtype": "Int",
+   "label": "Estimated Arrival Time (min)"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Delivery Job",
+   "link_fieldname": "delivery_job"
+  }
+ ],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Assignment History",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Driver",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Person",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "assigned_at",
+ "sort_order": "DESC",
+ "states": []
+}

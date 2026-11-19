@@ -1,0 +1,194 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "delivery_job",
+  "attempt_number",
+  "section_break_assignment",
+  "rider",
+  "vehicle",
+  "section_break_timing",
+  "attempt_date",
+  "arrival_time",
+  "completion_time",
+  "section_break_outcome",
+  "attempt_status",
+  "failure_reason",
+  "gps_latitude",
+  "gps_longitude",
+  "section_break_misc",
+  "notes",
+  "attachment"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "DA-.YYYY.-",
+   "default": "DA-.YYYY.-"
+  },
+  {
+   "fieldname": "delivery_job",
+   "fieldtype": "Link",
+   "label": "Delivery Job",
+   "options": "Delivery Job",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "attempt_number",
+   "fieldtype": "Int",
+   "label": "Attempt Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_assignment",
+   "fieldtype": "Section Break",
+   "label": "Assignment"
+  },
+  {
+   "fieldname": "rider",
+   "fieldtype": "Link",
+   "label": "Rider",
+   "options": "Rider Profile"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle"
+  },
+  {
+   "fieldname": "section_break_timing",
+   "fieldtype": "Section Break",
+   "label": "Timing"
+  },
+  {
+   "fieldname": "attempt_date",
+   "fieldtype": "Date",
+   "label": "Attempt Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "arrival_time",
+   "fieldtype": "Datetime",
+   "label": "Arrival Time"
+  },
+  {
+   "fieldname": "completion_time",
+   "fieldtype": "Datetime",
+   "label": "Completion Time"
+  },
+  {
+   "fieldname": "section_break_outcome",
+   "fieldtype": "Section Break",
+   "label": "Outcome"
+  },
+  {
+   "fieldname": "attempt_status",
+   "fieldtype": "Select",
+   "label": "Attempt Status",
+   "options": "Successful\nFailed\nCustomer Unavailable\nRescheduled",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "failure_reason",
+   "fieldtype": "Small Text",
+   "label": "Failure Reason"
+  },
+  {
+   "fieldname": "gps_latitude",
+   "fieldtype": "Float",
+   "label": "GPS Latitude"
+  },
+  {
+   "fieldname": "gps_longitude",
+   "fieldtype": "Float",
+   "label": "GPS Longitude"
+  },
+  {
+   "fieldname": "section_break_misc",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  }
+ ],
+ "links": [
+  {
+   "link_doctype": "Proof of Delivery",
+   "link_fieldname": "delivery_attempt"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Delivery Attempt",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Dispatcher",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

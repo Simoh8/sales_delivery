@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "autoname": "field:delivery_job",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "delivery_job",
+  "stop_sequence",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "delivery_job",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Delivery Job",
+   "options": "Delivery Job",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "stop_sequence",
+   "fieldtype": "Int",
+   "label": "Stop Sequence",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "istable": 1,
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Delivery Batch Item",
+ "owner": "Administrator",
+ "permissions": []
+}

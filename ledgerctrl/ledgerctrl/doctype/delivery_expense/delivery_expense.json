@@ -1,0 +1,172 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "delivery_job",
+  "delivery_batch",
+  "vehicle",
+  "rider",
+  "expense_date",
+  "expense_type",
+  "amount",
+  "description",
+  "receipt_attachment",
+  "expense_status",
+  "expense_claim",
+  "section_break_sync",
+  "idempotency_key",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "DEXP-.YYYY.-",
+   "default": "DEXP-.YYYY.-"
+  },
+  {
+   "fieldname": "delivery_job",
+   "fieldtype": "Link",
+   "label": "Delivery Job",
+   "options": "Delivery Job"
+  },
+  {
+   "fieldname": "delivery_batch",
+   "fieldtype": "Link",
+   "label": "Delivery Batch",
+   "options": "Delivery Batch"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle"
+  },
+  {
+   "fieldname": "rider",
+   "fieldtype": "Link",
+   "label": "Rider",
+   "options": "Rider Profile"
+  },
+  {
+   "fieldname": "expense_date",
+   "fieldtype": "Date",
+   "label": "Expense Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expense_type",
+   "fieldtype": "Select",
+   "label": "Expense Type",
+   "options": "Fuel\nParking\nToll\nLoading\nMaintenance\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "receipt_attachment",
+   "fieldtype": "Attach",
+   "label": "Receipt Attachment"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "expense_status",
+   "fieldtype": "Select",
+   "label": "Expense Status",
+   "options": "Draft\nSubmitted\nApproved\nReimbursed\nCancelled"
+  },
+  {
+   "fieldname": "expense_claim",
+   "fieldtype": "Link",
+   "label": "Expense Claim",
+   "options": "Expense Claim"
+  },
+  {
+   "fieldname": "section_break_sync",
+   "fieldtype": "Section Break",
+   "label": "Offline Sync"
+  },
+  {
+   "fieldname": "idempotency_key",
+   "fieldtype": "Data",
+   "label": "Idempotency Key",
+   "unique": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Delivery Expense",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Fleet Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Dispatcher"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "expense_date",
+ "sort_order": "DESC",
+ "states": []
+}

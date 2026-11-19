@@ -1,8 +1,8 @@
 import frappe
-
-
+from ledgerctrl.ledgerctrl.api.decorators import jwt_required
 
 @frappe.whitelist()
+@jwt_required
 def get_user_delivery_trips(user):
     user = frappe.session.user
 

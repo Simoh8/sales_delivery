@@ -1,7 +1,9 @@
 import frappe
 from frappe import _
+from ledgerctrl.ledgerctrl.api.decorators import jwt_required
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
+@jwt_required
 def get_assigned_orders():
     user = frappe.session.user
 

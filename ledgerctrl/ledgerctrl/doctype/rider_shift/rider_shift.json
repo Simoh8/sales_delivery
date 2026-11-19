@@ -1,0 +1,239 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "rider",
+  "employee",
+  "shift_date",
+  "section_break_schedule",
+  "shift_start",
+  "shift_end",
+  "actual_clock_in",
+  "actual_clock_out",
+  "section_break_stats",
+  "total_working_hours",
+  "total_break_duration",
+  "total_active_delivery_hours",
+  "column_break_stats",
+  "total_deliveries",
+  "completed_deliveries",
+  "failed_deliveries",
+  "total_distance_travelled",
+  "section_break_odometer",
+  "opening_odometer",
+  "closing_odometer",
+  "section_break_status",
+  "shift_status",
+  "supervisor",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "RS-.YYYY.-",
+   "default": "RS-.YYYY.-"
+  },
+  {
+   "fieldname": "rider",
+   "fieldtype": "Link",
+   "label": "Rider",
+   "options": "Rider Profile",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "rider.employee",
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shift_date",
+   "fieldtype": "Date",
+   "label": "Shift Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_schedule",
+   "fieldtype": "Section Break",
+   "label": "Schedule"
+  },
+  {
+   "fieldname": "shift_start",
+   "fieldtype": "Time",
+   "label": "Shift Start"
+  },
+  {
+   "fieldname": "shift_end",
+   "fieldtype": "Time",
+   "label": "Shift End"
+  },
+  {
+   "fieldname": "actual_clock_in",
+   "fieldtype": "Datetime",
+   "label": "Actual Clock In"
+  },
+  {
+   "fieldname": "actual_clock_out",
+   "fieldtype": "Datetime",
+   "label": "Actual Clock Out"
+  },
+  {
+   "fieldname": "section_break_stats",
+   "fieldtype": "Section Break",
+   "label": "Statistics"
+  },
+  {
+   "fieldname": "total_working_hours",
+   "fieldtype": "Float",
+   "label": "Total Working Hours"
+  },
+  {
+   "fieldname": "total_break_duration",
+   "fieldtype": "Float",
+   "label": "Total Break Duration (hrs)"
+  },
+  {
+   "fieldname": "total_active_delivery_hours",
+   "fieldtype": "Float",
+   "label": "Total Active Delivery Hours"
+  },
+  {
+   "fieldname": "column_break_stats",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_deliveries",
+   "fieldtype": "Int",
+   "label": "Total Deliveries",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "completed_deliveries",
+   "fieldtype": "Int",
+   "label": "Completed Deliveries",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "failed_deliveries",
+   "fieldtype": "Int",
+   "label": "Failed Deliveries",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_distance_travelled",
+   "fieldtype": "Float",
+   "label": "Total Distance Travelled (km)"
+  },
+  {
+   "fieldname": "section_break_odometer",
+   "fieldtype": "Section Break",
+   "label": "Odometer"
+  },
+  {
+   "fieldname": "opening_odometer",
+   "fieldtype": "Float",
+   "label": "Opening Odometer"
+  },
+  {
+   "fieldname": "closing_odometer",
+   "fieldtype": "Float",
+   "label": "Closing Odometer"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Scheduled",
+   "fieldname": "shift_status",
+   "fieldtype": "Select",
+   "label": "Shift Status",
+   "options": "Scheduled\nActive\nCompleted\nCancelled"
+  },
+  {
+   "fieldname": "supervisor",
+   "fieldtype": "Link",
+   "label": "Supervisor",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Rider Shift",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Dispatcher"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "shift_date",
+ "sort_order": "DESC",
+ "states": []
+}

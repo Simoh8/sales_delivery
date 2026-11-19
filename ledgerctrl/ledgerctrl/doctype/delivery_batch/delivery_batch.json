@@ -1,0 +1,257 @@
+{
+ "actions": [],
+ "autoname": "field:batch_id",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "batch_id",
+  "batch_date",
+  "company",
+  "branch",
+  "section_break_assignment",
+  "assigned_rider",
+  "assigned_employee",
+  "assigned_vehicle",
+  "delivery_trip",
+  "delivery_zone",
+  "dispatcher",
+  "section_break_status",
+  "batch_status",
+  "total_jobs",
+  "completed_jobs",
+  "pending_jobs",
+  "failed_jobs",
+  "column_break_status",
+  "total_estimated_distance",
+  "actual_distance",
+  "dispatch_time",
+  "completion_time",
+  "section_break_jobs",
+  "jobs",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "batch_id",
+   "fieldtype": "Data",
+   "label": "Batch ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "batch_date",
+   "fieldtype": "Date",
+   "label": "Batch Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Data",
+   "label": "Branch"
+  },
+  {
+   "fieldname": "section_break_assignment",
+   "fieldtype": "Section Break",
+   "label": "Assignment"
+  },
+  {
+   "fieldname": "assigned_rider",
+   "fieldtype": "Link",
+   "label": "Assigned Rider",
+   "options": "Rider Profile"
+  },
+  {
+   "fetch_from": "assigned_rider.employee",
+   "fieldname": "assigned_employee",
+   "fieldtype": "Link",
+   "label": "Assigned Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assigned_vehicle",
+   "fieldtype": "Link",
+   "label": "Assigned Vehicle",
+   "options": "Vehicle"
+  },
+  {
+   "fieldname": "delivery_trip",
+   "fieldtype": "Link",
+   "label": "Delivery Trip",
+   "options": "Delivery Trip"
+  },
+  {
+   "fieldname": "delivery_zone",
+   "fieldtype": "Link",
+   "label": "Delivery Zone",
+   "options": "Delivery Zone"
+  },
+  {
+   "fieldname": "dispatcher",
+   "fieldtype": "Link",
+   "label": "Dispatcher",
+   "options": "User",
+   "default": "__user"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "batch_status",
+   "fieldtype": "Select",
+   "label": "Batch Status",
+   "options": "Draft\nReady\nDispatched\nIn Progress\nCompleted\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_jobs",
+   "fieldtype": "Int",
+   "label": "Total Jobs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "completed_jobs",
+   "fieldtype": "Int",
+   "label": "Completed Jobs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "pending_jobs",
+   "fieldtype": "Int",
+   "label": "Pending Jobs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failed_jobs",
+   "fieldtype": "Int",
+   "label": "Failed Jobs",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_status",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_estimated_distance",
+   "fieldtype": "Float",
+   "label": "Total Estimated Distance (km)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "actual_distance",
+   "fieldtype": "Float",
+   "label": "Actual Distance (km)"
+  },
+  {
+   "fieldname": "dispatch_time",
+   "fieldtype": "Datetime",
+   "label": "Dispatch Time"
+  },
+  {
+   "fieldname": "completion_time",
+   "fieldtype": "Datetime",
+   "label": "Completion Time"
+  },
+  {
+   "fieldname": "section_break_jobs",
+   "fieldtype": "Section Break",
+   "label": "Delivery Jobs"
+  },
+  {
+   "fieldname": "jobs",
+   "fieldtype": "Table",
+   "label": "Delivery Jobs",
+   "options": "Delivery Batch Item"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "links": [
+  {
+   "link_doctype": "Delivery Job",
+   "link_fieldname": "delivery_batch"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Delivery Batch",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Dispatcher",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "batch_date",
+ "sort_order": "DESC",
+ "states": []
+}

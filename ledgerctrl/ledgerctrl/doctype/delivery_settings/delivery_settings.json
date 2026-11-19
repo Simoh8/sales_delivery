@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_proof",
+  "require_otp",
+  "require_signature",
+  "require_photograph",
+  "require_recipient_confirmation",
+  "section_break_dispatch",
+  "allow_multiple_active_deliveries",
+  "allow_overlapping_shifts",
+  "allow_multiple_active_vehicle_assignments",
+  "section_break_alerts",
+  "maintenance_reminder_days",
+  "document_expiry_alert_days",
+  "sla_breach_alert_hours"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_proof",
+   "fieldtype": "Section Break",
+   "label": "Proof of Delivery Requirements"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_otp",
+   "fieldtype": "Check",
+   "label": "Require OTP Verification"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_signature",
+   "fieldtype": "Check",
+   "label": "Require Customer Signature"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_photograph",
+   "fieldtype": "Check",
+   "label": "Require Delivery Photograph"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_recipient_confirmation",
+   "fieldtype": "Check",
+   "label": "Require Recipient Confirmation"
+  },
+  {
+   "fieldname": "section_break_dispatch",
+   "fieldtype": "Section Break",
+   "label": "Dispatch Rules"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_multiple_active_deliveries",
+   "fieldtype": "Check",
+   "label": "Allow Multiple Active Deliveries Per Rider"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_overlapping_shifts",
+   "fieldtype": "Check",
+   "label": "Allow Overlapping Shifts"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_multiple_active_vehicle_assignments",
+   "fieldtype": "Check",
+   "label": "Allow Multiple Active Vehicle Assignments"
+  },
+  {
+   "fieldname": "section_break_alerts",
+   "fieldtype": "Section Break",
+   "label": "Alerts"
+  },
+  {
+   "default": "7",
+   "fieldname": "maintenance_reminder_days",
+   "fieldtype": "Int",
+   "label": "Maintenance Reminder (days before due)"
+  },
+  {
+   "default": "30",
+   "fieldname": "document_expiry_alert_days",
+   "fieldtype": "Int",
+   "label": "Document Expiry Alert (days before expiry)"
+  },
+  {
+   "default": "60",
+   "fieldname": "sla_breach_alert_hours",
+   "fieldtype": "Int",
+   "label": "SLA Breach Alert (minutes before deadline)"
+  }
+ ],
+ "issingle": 1,
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Delivery Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

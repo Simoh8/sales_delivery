@@ -1,0 +1,201 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "delivery_job",
+  "delivery_attempt",
+  "section_break_recipient",
+  "customer",
+  "recipient_name",
+  "recipient_phone",
+  "received_by",
+  "section_break_delivery",
+  "delivery_timestamp",
+  "gps_latitude",
+  "gps_longitude",
+  "section_break_proof",
+  "customer_signature",
+  "delivery_photograph",
+  "otp_verification_status",
+  "otp_verified_at",
+  "section_break_sync",
+  "idempotency_key",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "POD-.YYYY.-",
+   "default": "POD-.YYYY.-"
+  },
+  {
+   "fieldname": "delivery_job",
+   "fieldtype": "Link",
+   "label": "Delivery Job",
+   "options": "Delivery Job",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "delivery_attempt",
+   "fieldtype": "Link",
+   "label": "Delivery Attempt",
+   "options": "Delivery Attempt"
+  },
+  {
+   "fieldname": "section_break_recipient",
+   "fieldtype": "Section Break",
+   "label": "Recipient"
+  },
+  {
+   "fetch_from": "delivery_job.customer",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recipient_name",
+   "fieldtype": "Data",
+   "label": "Recipient Name"
+  },
+  {
+   "fieldname": "recipient_phone",
+   "fieldtype": "Data",
+   "label": "Recipient Phone"
+  },
+  {
+   "fieldname": "received_by",
+   "fieldtype": "Data",
+   "label": "Received By"
+  },
+  {
+   "fieldname": "section_break_delivery",
+   "fieldtype": "Section Break",
+   "label": "Delivery"
+  },
+  {
+   "fieldname": "delivery_timestamp",
+   "fieldtype": "Datetime",
+   "label": "Delivery Timestamp",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gps_latitude",
+   "fieldtype": "Float",
+   "label": "GPS Latitude"
+  },
+  {
+   "fieldname": "gps_longitude",
+   "fieldtype": "Float",
+   "label": "GPS Longitude"
+  },
+  {
+   "fieldname": "section_break_proof",
+   "fieldtype": "Section Break",
+   "label": "Proof of Delivery"
+  },
+  {
+   "fieldname": "customer_signature",
+   "fieldtype": "Attach",
+   "label": "Customer Signature"
+  },
+  {
+   "fieldname": "delivery_photograph",
+   "fieldtype": "Attach",
+   "label": "Delivery Photograph"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "otp_verification_status",
+   "fieldtype": "Select",
+   "label": "OTP Verification Status",
+   "options": "Pending\nVerified\nFailed\nNot Required"
+  },
+  {
+   "fieldname": "otp_verified_at",
+   "fieldtype": "Datetime",
+   "label": "OTP Verified At"
+  },
+  {
+   "fieldname": "section_break_sync",
+   "fieldtype": "Section Break",
+   "label": "Offline Sync"
+  },
+  {
+   "fieldname": "idempotency_key",
+   "fieldtype": "Data",
+   "label": "Idempotency Key",
+   "unique": 1
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "modified": "2026-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ledgerctrl",
+ "name": "Proof of Delivery",
+ "naming_rule": "By Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delivery Rider",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Dispatcher"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Delivery Analyst"
+  }
+ ],
+ "sort_field": "delivery_timestamp",
+ "sort_order": "DESC",
+ "states": []
+}
