@@ -8,10 +8,31 @@ import secrets
 
 # JWT Configuration
 # These should be set in site_config.json or environment variables
-JWT_SECRET_KEY = frappe.get_site_config().get("jwt_secret_key") or secrets.token_urlsafe(32)
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 15
 REFRESH_TOKEN_EXPIRE_DAYS = 30
+
+
+def _jwt_secret():
+    """Resolve the signing secret for this site.
+
+    Prefers ``jwt_secret_key`` in site_config.json. When absent, derives a
+    deterministic secret from the site's DB credentials so tokens survive
+    worker restarts/reloads and remain isolated between sites (each Frappe
+    site is a separate tenant/database).
+    """
+    configured = frappe.get_site_config().get("jwt_secret_key")
+    if configured:
+        return configured
+    seed = "|".join(
+        [
+            frappe.local.site or "",
+            frappe.conf.db_name or "",
+            frappe.conf.db_password or "",
+            "ledgerctrl-jwt-v1",
+        ]
+    )
+    return hashlib.sha256(seed.encode()).hexdigest()
 
 
 def generate_access_token(user_data):
@@ -34,7 +55,7 @@ def generate_access_token(user_data):
         "exp": datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         "type": "access"
     }
-    return jwt.encode(payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+    return jwt.encode(payload, _jwt_secret(), algorithm=JWT_ALGORITHM)
 
 
 def generate_refresh_token(user_email, device_info=None):
@@ -72,7 +93,7 @@ def generate_refresh_token(user_email, device_info=None):
             "expires_at": datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
             "is_revoked": 0
         })
-        refresh_token_doc.insert()
+        refresh_token_doc.insert(ignore_permissions=True)
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Refresh Token Creation Error")
         frappe.throw(_("Failed to create refresh token"))
@@ -95,7 +116,9 @@ def verify_access_token(token):
         jwt.InvalidTokenError: Token is invalid
     """
     try:
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(token, _jwt_secret(), algorithms=[JWT_ALGORITHM])
+        if payload.get("type") != "access":
+            frappe.throw(_("Invalid token"), frappe.AuthenticationError)
         return payload
     except jwt.ExpiredSignatureError:
         frappe.throw(_("Token has expired"), frappe.AuthenticationError)
@@ -134,7 +157,12 @@ def verify_refresh_token(token):
     if refresh_token[2] < datetime.utcnow():
         frappe.throw(_("Refresh token has expired"), frappe.AuthenticationError)
 
-    return refresh_token[1]  # Return user email
+    frappe.db.set_value(
+        "Refresh Token", refresh_token[0], "last_used_at", datetime.utcnow(),
+        update_modified=False,
+    )
+
+    return refresh_token[1]  # Return user (User docname)
 
 
 def revoke_refresh_token(token):

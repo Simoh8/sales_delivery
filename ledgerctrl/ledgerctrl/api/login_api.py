@@ -13,6 +13,23 @@ from ledgerctrl.ledgerctrl.api.jwt_auth import (
     get_user_from_token
 )
 
+def _as_bool(value):
+    """Frappe form params arrive as strings; treat only explicit truthy
+    values as True so use_jwt="false"/"0" doesn't enable JWT mode."""
+    if isinstance(value, str):
+        return value.strip().lower() in ("1", "true", "yes", "on")
+    return bool(value)
+
+
+def _tenant_context():
+    """Tenant identifiers returned at login so the app can show which
+    site/company the rider belongs to (multi-tenant deployments)."""
+    return {
+        "site": frappe.local.site,
+        "company": frappe.defaults.get_user_default("Company"),
+    }
+
+
 @frappe.whitelist(allow_guest=True)
 def user_logn(usr, passwd, use_jwt=False, device_info=None):
     """
@@ -51,7 +68,7 @@ def user_logn(usr, passwd, use_jwt=False, device_info=None):
 
     frappe.local.response["sid"] = frappe.session.sid
 
-    if use_jwt:
+    if _as_bool(use_jwt):
         # Generate JWT tokens
         access_token = generate_access_token(user_data)
         refresh_token = generate_refresh_token(user.email, device_info)
@@ -65,7 +82,8 @@ def user_logn(usr, passwd, use_jwt=False, device_info=None):
                 "refresh_token": refresh_token,
                 "token_type": "Bearer",
                 "expires_in": 900,  # 15 minutes in seconds
-                **user_data
+                **user_data,
+                **_tenant_context()
             }
         }
     else:
@@ -106,8 +124,7 @@ def get_user_info():
             frappe.throw(_("Invalid or expired session. Please login again."), frappe.AuthenticationError)
 
         user_doc = frappe.get_doc("User", user)
-        print("The user doc is", user_doc)
-        
+
         
 
         return {
@@ -173,11 +190,12 @@ def refresh_token(refresh_token_str, device_info=None):
         dict: New access token and refresh token
     """
     try:
-        # Verify refresh token and get user email
-        user_email = verify_refresh_token(refresh_token_str)
+        # Verify refresh token and get the owning User (docname)
+        user_name = verify_refresh_token(refresh_token_str)
 
         # Get user data
-        user = frappe.get_doc("User", user_email)
+        user = frappe.get_doc("User", user_name)
+        user_email = user.email
         user_data = {
             "username": user.username,
             "email": user.email,
@@ -223,10 +241,14 @@ def refresh_token(refresh_token_str, device_info=None):
         }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def logout(refresh_token_str=None, logout_all=False):
     """
     Logout endpoint to revoke refresh tokens.
+
+    Works for mobile clients that only hold a refresh token (no session):
+    pass refresh_token_str to revoke that device, or logout_all=true with
+    an authenticated session/JWT to revoke every token the user owns.
 
     Args:
         refresh_token_str: The refresh token to revoke (optional if logout_all=True)
@@ -235,10 +257,10 @@ def logout(refresh_token_str=None, logout_all=False):
     try:
         user = frappe.session.user
 
-        if not user or user == "Guest":
-            frappe.throw(_("Invalid session"), frappe.AuthenticationError)
+        if refresh_token_str:
+            revoke_refresh_token(refresh_token_str)
 
-        if logout_all:
+        if user and user != "Guest" and logout_all:
             # Revoke all tokens for the user (stored as User docname)
             revoke_all_user_tokens(user)
             return {
@@ -246,18 +268,24 @@ def logout(refresh_token_str=None, logout_all=False):
                 "message": "Logged out from all devices successfully"
             }
         elif refresh_token_str:
-            # Revoke specific token
-            revoke_refresh_token(refresh_token_str)
             return {
                 "success_key": 1,
                 "message": "Logged out successfully"
             }
-        else:
+        elif user and user != "Guest":
             return {
                 "success_key": 1,
                 "message": "Session ended"
             }
+        else:
+            frappe.throw(_("Invalid session"), frappe.AuthenticationError)
 
+    except frappe.AuthenticationError as e:
+        frappe.local.response.http_status_code = 401
+        return {
+            "success_key": 0,
+            "message": str(e)
+        }
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Logout Error")
         frappe.local.response.http_status_code = 500
@@ -351,5 +379,6 @@ def session_login(device_info=None):
             "token_type": "Bearer",
             "expires_in": 900,
             **user_data,
+            **_tenant_context(),
         },
     }

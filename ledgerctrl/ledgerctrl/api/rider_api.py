@@ -220,9 +220,15 @@ def get_my_shifts(limit=20):
 def get_my_deliveries(status=None, limit=50, start=0):
     """Assigned delivery jobs for the logged-in rider (paginated)."""
     rider = _require_rider()
-    filters = {"rider_profile": rider}
+    employee = frappe.db.get_value("Rider Profile", rider, "employee")
+    # Match jobs assigned via Rider Profile or directly via driver Employee
+    filters = [
+        {"rider_profile": rider},
+        {"driver": employee} if employee else {"rider_profile": rider},
+    ]
     if status:
-        filters["status"] = status
+        for f in filters:
+            f["status"] = status
     jobs = frappe.get_all(
         "Delivery Job",
         filters=filters,

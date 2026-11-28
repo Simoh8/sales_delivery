@@ -10,7 +10,7 @@ class DeliveryBatch(Document):
     def autoname(self):
         if not self.batch_id:
             self.batch_id = "DB-{0}-{1:04d}".format(
-                nowdate().strftime("%Y%m%d"), frappe.db.count("Delivery Batch") + 1
+                nowdate().replace("-", ""), frappe.db.count("Delivery Batch") + 1
             )
 
     def validate(self):

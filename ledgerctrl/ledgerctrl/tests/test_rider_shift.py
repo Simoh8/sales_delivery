@@ -17,6 +17,8 @@ class TestRiderShift(FrappeTestCase):
                 "company": self.company,
                 "status": "Active",
                 "date_of_joining": nowdate(),
+                "gender": "Male",
+                "date_of_birth": "1990-01-01",
             }
         ).insert(ignore_permissions=True)
         self.rider = frappe.get_doc(

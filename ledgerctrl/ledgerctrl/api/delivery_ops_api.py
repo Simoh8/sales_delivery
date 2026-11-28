@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.utils import now_datetime, nowdate, get_datetime
 from ledgerctrl.ledgerctrl.api.decorators import jwt_required
+from ledgerctrl.ledgerctrl.api.rider_api import update_location
 
 ACTIVE_STATUSES = ["Pending", "Dispatched", "Accepted", "En Route", "Arrived", "In Progress"]
 
@@ -12,11 +13,20 @@ def _get_rider():
     return RiderProfile.get_rider_for_user()
 
 
+def _require_rider():
+    rider = _get_rider()
+    if not rider:
+        frappe.local.response.http_status_code = 403
+        frappe.throw(_("No active Rider Profile found for this user"), frappe.PermissionError)
+    return rider
+
+
 def _check_job_access(job_name, rider=None):
     job = frappe.db.get_value(
         "Delivery Job",
         job_name,
-        ["status", "rider_profile", "driver", "vehicle", "customer", "delivery_batch"],
+        ["status", "rider_profile", "driver", "vehicle", "customer", "delivery_batch",
+         "delivery_note"],
         as_dict=True,
     )
     if not job:
@@ -26,6 +36,31 @@ def _check_job_access(job_name, rider=None):
         if job.rider_profile != rider and job.driver != employee:
             frappe.throw(_("Not authorized for this delivery"), frappe.PermissionError)
     return job
+
+
+def _advance_job_to_completed(delivery_job):
+    """Walk a Delivery Job through its valid status chain to Completed.
+
+    Used when proof of delivery (or a successful attempt) confirms the
+    delivery so the job doesn't dead-end in an intermediate status.
+    """
+    chain = ["Pending", "Dispatched", "Accepted", "En Route", "Arrived",
+             "In Progress", "Completed"]
+    job_doc = frappe.get_doc("Delivery Job", delivery_job)
+    # Server-side validated transitions; riders lack desk write permission
+    job_doc.flags.ignore_permissions = True
+    if job_doc.status not in chain:
+        return job_doc.status
+    for target in chain[chain.index(job_doc.status) + 1:]:
+        try:
+            job_doc.update_status(target)
+        except Exception:
+            frappe.log_error(
+                f"Delivery Job {delivery_job}: could not advance to {target}\n{frappe.get_traceback()}",
+                "Delivery Job auto-complete failed",
+            )
+            break
+    return job_doc.status
 
 
 @frappe.whitelist()
@@ -44,7 +79,7 @@ def create_delivery_attempt(delivery_job, attempt_status, failure_reason=None,
         if existing:
             return {"success_key": 1, "attempt": existing, "duplicate": True}
 
-    rider = _get_rider()
+    rider = _require_rider()
     job = _check_job_access(delivery_job, rider=rider)
 
     vehicle = job.vehicle
@@ -68,6 +103,8 @@ def create_delivery_attempt(delivery_job, attempt_status, failure_reason=None,
         }
     )
     attempt.insert(ignore_permissions=True)
+    if attempt_status == "Successful":
+        _advance_job_to_completed(delivery_job)
     return {"success_key": 1, "attempt": attempt.name}
 
 
@@ -86,24 +123,39 @@ def submit_proof_of_delivery(delivery_job, delivery_attempt=None,
         if existing:
             return {"success_key": 1, "pod": existing, "duplicate": True}
 
-    rider = _get_rider()
+    rider = _require_rider()
     job = _check_job_access(delivery_job, rider=rider)
 
-    # If the job's Delivery Note has an OTP and one was supplied, verify it
+    # Resolve the OTP generated on the linked Delivery Note (if any)
+    delivery_note = job.get("delivery_note") or frappe.db.get_value(
+        "Delivery Job", delivery_job, "delivery_note"
+    )
+    expected_otp = None
+    if delivery_note and frappe.get_meta("Delivery Note").get_field("custom_otp_code"):
+        expected_otp = frappe.db.get_value(
+            "Delivery Note", delivery_note, "custom_otp_code"
+        )
+
+    settings = frappe.get_single("Delivery Settings")
+    otp_required = bool(expected_otp) and bool(
+        getattr(settings, "require_otp", 0)
+    )
+
     otp_status = "Not Required"
     otp_verified_at = None
-    if otp:
-        dn = job.get("delivery_note") if hasattr(job, "get") else frappe.db.get_value(
-            "Delivery Job", delivery_job, "delivery_note"
-        )
-        expected = frappe.db.get_value("Delivery Note", dn, "custom_otp_code") if dn else None
-        if expected:
-            if str(otp) == str(expected):
-                otp_status = "Verified"
-                otp_verified_at = now_datetime()
-            else:
-                otp_status = "Failed"
-                frappe.throw(_("Invalid OTP"), frappe.ValidationError)
+    if expected_otp:
+        if not otp:
+            if otp_required:
+                frappe.throw(
+                    _("OTP is required to confirm this delivery"),
+                    frappe.ValidationError,
+                )
+            otp_status = "Pending"
+        elif str(otp) == str(expected_otp):
+            otp_status = "Verified"
+            otp_verified_at = now_datetime()
+        else:
+            frappe.throw(_("Invalid OTP"), frappe.ValidationError)
 
     pod = frappe.get_doc(
         {
@@ -127,7 +179,9 @@ def submit_proof_of_delivery(delivery_job, delivery_attempt=None,
         }
     )
     pod.insert(ignore_permissions=True)
-    return {"success_key": 1, "pod": pod.name}
+    # POD confirms the handover — finalize the Delivery Job
+    job_status = _advance_job_to_completed(delivery_job)
+    return {"success_key": 1, "pod": pod.name, "job_status": job_status}
 
 
 @frappe.whitelist()
@@ -136,7 +190,7 @@ def update_delivery_stop(stop, stop_status, actual_arrival=None,
                          departure_time=None, lat=None, lng=None, notes=None):
     stop_doc = frappe.get_doc("Delivery Stop", stop)
     # Authorization: rider must own the related job/batch
-    rider = _get_rider()
+    rider = _require_rider()
     if rider and stop_doc.delivery_job:
         _check_job_access(stop_doc.delivery_job, rider=rider)
     if stop_status:
@@ -164,7 +218,7 @@ def submit_vehicle_inspection(vehicle, inspection_type, odometer_reading=None,
                               lights_condition=None, engine_condition=None,
                               general_condition=None, defects_identified=None,
                               attachments=None, lat=None, lng=None):
-    rider = _get_rider()
+    rider = _require_rider()
     doc = frappe.get_doc(
         {
             "doctype": "Vehicle Inspection",
@@ -315,14 +369,98 @@ def sync_offline(payloads):
 
 @frappe.whitelist()
 @jwt_required
+def reject_assignment(delivery_job, reason=None):
+    """Rider declines a Dispatched job; it returns to the dispatch pool."""
+    rider = _require_rider()
+    _check_job_access(delivery_job, rider=rider)
+
+    job_doc = frappe.get_doc("Delivery Job", delivery_job)
+    if job_doc.status != "Dispatched":
+        frappe.throw(
+            _("Only Dispatched deliveries can be rejected (current: {0})").format(
+                job_doc.status
+            )
+        )
+
+    frappe.db.set_value(
+        "Delivery Job",
+        delivery_job,
+        {
+            "rider_profile": None,
+            "driver": None,
+            "assigned_employee": None,
+            "vehicle": None,
+            "status": "Pending",
+        },
+    )
+
+    latest = frappe.db.get_value(
+        "Assignment History",
+        {"delivery_job": delivery_job,
+         "assignment_status": ["in", ["Assigned", "Accepted"]]},
+        "name",
+        order_by="assigned_at desc",
+    )
+    if latest:
+        frappe.db.set_value(
+            "Assignment History",
+            latest,
+            {
+                "assignment_status": "Rejected",
+                "rejected_at": now_datetime(),
+                "reason_for_change": reason or "Rejected by rider",
+            },
+        )
+
+    frappe.get_doc(
+        {
+            "doctype": "Delivery Event",
+            "delivery_job": delivery_job,
+            "event_type": "Assignment",
+            "timestamp": now_datetime(),
+            "old_status": "Dispatched",
+            "new_status": "Pending",
+            "reason": reason or "Rejected by rider",
+            "notes": f"Assignment to {rider} rejected",
+            "created_via": "Mobile App",
+        }
+    ).insert(ignore_permissions=True)
+
+    frappe.db.commit()
+    return {"success_key": 1, "delivery_job": delivery_job, "status": "Pending"}
+
+
+@frappe.whitelist()
+@jwt_required
 def update_job_status(delivery_job, new_status, notes=None, lat=None, lng=None):
     """Driver-facing status transition with server-side validation."""
-    rider = _get_rider()
+    rider = _require_rider()
     job_doc = frappe.get_doc("Delivery Job", delivery_job)
     _check_job_access(delivery_job, rider=rider)
     if job_doc.status in ("Completed", "Cancelled"):
         frappe.throw(_("Cannot modify a {0} delivery").format(job_doc.status))
+    # Ownership already verified; riders lack desk write permission on Delivery Job
+    job_doc.flags.ignore_permissions = True
     job_doc.update_status(new_status, notes=notes)
     if lat is not None and lng is not None:
         job_doc.add_gps_log(lat, lng)
+
+    if new_status == "Accepted":
+        latest = frappe.db.get_value(
+            "Assignment History",
+            {"delivery_job": delivery_job,
+             "assignment_status": ["in", ["Assigned", "Accepted"]]},
+            "name",
+            order_by="assigned_at desc",
+        )
+        if latest:
+            frappe.db.set_value(
+                "Assignment History",
+                latest,
+                {
+                    "assignment_status": "Accepted",
+                    "accepted_at": now_datetime(),
+                },
+            )
+
     return {"success_key": 1, "status": job_doc.status}

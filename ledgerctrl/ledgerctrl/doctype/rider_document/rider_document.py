@@ -1,6 +1,6 @@
 import frappe
 from frappe.model.document import Document
-from frappe.utils import today
+from frappe.utils import getdate, today
 from frappe import _
 
 
@@ -18,7 +18,7 @@ class RiderDocument(Document):
     def update_expired_status(self):
         if (
             self.expiry_date
-            and self.expiry_date < today()
+            and getdate(self.expiry_date) < getdate(today())
             and self.verification_status != "Rejected"
         ):
             self.verification_status = "Expired"

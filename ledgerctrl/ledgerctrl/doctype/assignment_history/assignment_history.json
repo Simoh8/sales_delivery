@@ -52,7 +52,7 @@
    "fieldtype": "Link",
    "label": "Driver",
    "options": "Employee",
-   "reqd": 1
+   "reqd": 0
   },
   {
    "fetch_from": "driver.employee_name",

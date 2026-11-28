@@ -60,6 +60,9 @@ class TestDeliveryOperations(FrappeTestCase):
                 "license_plate": "TST" + uuid.uuid4().hex[:6].upper(),
                 "make": "Test",
                 "model": "Bike",
+                "last_odometer": 0,
+                "fuel_type": "Petrol",
+                "uom": "Unit",
             }
         ).insert(ignore_permissions=True)
         fl = frappe.get_doc(
@@ -83,8 +86,8 @@ class TestDeliveryOperations(FrappeTestCase):
                 "idempotency_key": "test-key-1",
             }
         )
-        # unique constraint on idempotency_key triggers DuplicateEntryError
-        self.assertRaises(frappe.DuplicateEntryError, dup.insert)
+        # unique constraint on idempotency_key blocks the duplicate
+        self.assertRaises(frappe.UniqueValidationError, dup.insert)
 
     def test_batch_stats(self):
         job = self._make_job()

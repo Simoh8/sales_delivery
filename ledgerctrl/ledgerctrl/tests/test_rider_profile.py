@@ -23,6 +23,8 @@ class TestRiderProfile(FrappeTestCase):
                 "company": self.company,
                 "status": "Active",
                 "date_of_joining": nowdate(),
+                "gender": "Male",
+                "date_of_birth": "1990-01-01",
             }
         )
         emp.insert(ignore_permissions=True)

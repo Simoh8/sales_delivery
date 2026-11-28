@@ -4,7 +4,7 @@ from frappe.utils import now_datetime
 from frappe import _
 
 
-class ProofOfDelivery(Document):
+class ProofofDelivery(Document):
     def validate(self):
         self.check_idempotency()
         self.validate_proof_requirements()
@@ -52,7 +52,11 @@ class ProofOfDelivery(Document):
         pod = frappe.get_doc("Proof of Delivery", pod_name)
         job = frappe.get_doc("Delivery Job", pod.delivery_job)
         dn = job.delivery_note
-        expected = frappe.db.get_value("Delivery Note", dn, "custom_otp_code") if dn else None
+        expected = (
+            frappe.db.get_value("Delivery Note", dn, "custom_otp_code")
+            if dn and frappe.get_meta("Delivery Note").get_field("custom_otp_code")
+            else None
+        )
         if not expected:
             frappe.throw(_("No OTP has been generated for this delivery"), frappe.ValidationError)
         if str(otp) != str(expected):

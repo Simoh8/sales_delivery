@@ -44,7 +44,7 @@
    "fieldtype": "Link",
    "label": "Employee",
    "options": "Employee",
-   "reqd": 1,
+   "reqd": 0,
    "unique": 1
   },
   {

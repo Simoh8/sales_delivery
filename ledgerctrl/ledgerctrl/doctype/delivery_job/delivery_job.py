@@ -211,7 +211,7 @@ class DeliveryJob(Document):
             "new_status": new_status,
             "timestamp": datetime.utcnow(),
             "notes": f"Status changed from {old_status} to {new_status}"
-        }).insert()
+        }).insert(ignore_permissions=True)
 
     def update_status(self, new_status, notes=None):
         """Update delivery job status with validation."""
@@ -264,7 +264,7 @@ class DeliveryJob(Document):
             "accuracy": accuracy,
             "speed": speed,
             "timestamp": datetime.utcnow()
-        }).insert()
+        }).insert(ignore_permissions=True)
 
     def assign_driver(self, driver_id, vehicle_id=None):
         """Assign a driver to this delivery job."""
@@ -284,7 +284,7 @@ class DeliveryJob(Document):
             "vehicle": vehicle_id,
             "assigned_at": datetime.utcnow(),
             "notes": f"Assigned to driver {driver_id}"
-        }).insert()
+        }).insert(ignore_permissions=True)
 
         # Log event if driver changed
         if old_driver and old_driver != driver_id:
@@ -296,4 +296,4 @@ class DeliveryJob(Document):
                 "new_status": f"Driver: {driver_id}",
                 "timestamp": datetime.utcnow(),
                 "notes": f"Driver reassigned from {old_driver} to {driver_id}"
-            }).insert()
+            }).insert(ignore_permissions=True)

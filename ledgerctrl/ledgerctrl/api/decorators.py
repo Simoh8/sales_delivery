@@ -23,6 +23,8 @@ def jwt_required(f):
     """
     @wraps(f)
     def wrapper(*args, **kwargs):
+        # Resolve + verify the token first; endpoint exceptions are left to
+        # Frappe's normal error handling instead of being masked as auth errors.
         try:
             # Try to get token from Authorization header
             auth_header = frappe.request.headers.get("Authorization")
@@ -54,13 +56,14 @@ def jwt_required(f):
                     "message": "User not found"
                 }
 
-            frappe.session.user = user
+            # Same pattern as jwt_auth_hook: preserve form_dict across set_user
+            form_dict = frappe.local.form_dict
+            frappe.set_user(user)
+            frappe.local.form_dict = form_dict
             frappe.local.session_user = user
 
             # Store user data in request for use in the endpoint
             frappe.local.jwt_user_data = user_data
-
-            return f(*args, **kwargs)
 
         except frappe.AuthenticationError as e:
             frappe.local.response.http_status_code = 401
@@ -75,6 +78,8 @@ def jwt_required(f):
                 "success_key": 0,
                 "message": f"Authentication error: {str(e)}"
             }
+
+        return f(*args, **kwargs)
 
     return wrapper
 
@@ -116,7 +121,9 @@ def jwt_optional(f):
             user = frappe.db.get_value("User", {"email": user_email}, "name")
 
             if user:
-                frappe.session.user = user
+                form_dict = frappe.local.form_dict
+                frappe.set_user(user)
+                frappe.local.form_dict = form_dict
                 frappe.local.session_user = user
                 frappe.local.jwt_user_data = user_data
 

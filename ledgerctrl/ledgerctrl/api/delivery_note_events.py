@@ -5,11 +5,24 @@ from frappe.exceptions import ValidationError
 from ledgerctrl.ledgerctrl.api.decorators import jwt_required
 
 
+def _otp_fields_available():
+    """The OTP custom fields are created on install/migrate; guard so a
+    missing field can't break Delivery Note submission."""
+    meta = frappe.get_meta("Delivery Note")
+    return bool(
+        meta.get_field("custom_otp_code")
+        and meta.get_field("custom_user_otp")
+        and meta.get_field("custom_otp_verified")
+    )
+
+
 def generate_otp(doc, method):
     """
     Generate and assign a 6-digit OTP to the Delivery Note upon first submission.
     This OTP is stored in custom_otp_code.
     """
+    if not _otp_fields_available():
+        return
     if doc.custom_otp_code:
         return  # OTP already exists; don't regenerate
 
@@ -31,6 +44,9 @@ def validate_otp(doc, method):
 
     if doc.status != "Closed":
         return  # Only apply OTP check when closing
+
+    if not _otp_fields_available():
+        return
 
     _ensure_otp_fields_present(doc)
     _validate_otp_match(doc)
